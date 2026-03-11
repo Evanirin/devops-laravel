@@ -1,7 +1,7 @@
 node {
     checkout scm
 
-    // deploy env dev
+    // Build
     stage("Build"){
         docker.image('composer:2.7').inside('-u root') {
             sh 'rm -f composer.lock'
@@ -10,7 +10,14 @@ node {
     }
 
     // Testing
-    docker.image('ubuntu').inside('-u root') {
-        sh 'echo "Ini adalah test"'
+    stage("Test"){
+        docker.image('ubuntu').inside('-u root') {
+            sh 'echo "Ini adalah test"'
+        }
+    }
+
+    // Deploy
+    stage("Deploy"){
+        sh 'ansible-playbook -i hosts deploy.yml'
     }
 }
